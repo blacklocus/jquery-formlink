@@ -16,7 +16,7 @@ form.
 
     $(form).formlink();
 
-This will generate an <a> at the end of the form with the FormLink.
+This will generate an &lt;a&gt; at the end of the form with the FormLink.
 
 TODO custom callback option...
 
