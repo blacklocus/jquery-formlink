@@ -16,7 +16,11 @@ form.
 
     $(form).formlink();
 
-This will generate an <a> at the end of the form with the FormLink. Alternatively, the FormLink handle may be given.
+This will generate an <a> at the end of the form with the FormLink.
+
+TODO custom callback option...
+
+Alternatively, the FormLink handle may be given.
 
     $(form).formlink({
         handle: '.formlink' // anything that jQuery accepts
