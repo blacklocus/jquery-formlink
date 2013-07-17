@@ -79,18 +79,25 @@
     This form is fleshed out to some notion of the maximum supported form complexity. All form elements that should be
     remembered must be properly <code>name</code> attributed. The form element itself does not require any sort of
     <code>id</code> attribute, though multiple identical forms on the same page may be ambiguous without unique ids.
+<p>
+    There are actually two forms on this test page: <a href="#frm-test-data">Test Data</a> &amp;
+    <a href="#frm-test-form">Test Form</a> both of which are formlink-enabled. The first has been given a custom handler,
+    a button which alerts the current formlink of that (small) form.
+    The second has a generated handle (FormLink &lt;a&gt; at the end), which can be clicked normally or right-clicked
+    to copy the URL.
 
-<h4>Test Data</h4>
 <form id="frm-test-data" class="pure-form" onsubmit="return false;">
+    <h4>Test Data</h4>
     <select name="test-set" class="pure-select">
         <!-- populated by js -->
     </select>
     <button type="submit" class="pure-button">Load Test Data</button>
     <span>Populates all fields except file upload. Does not change button values.</span>
+    <button id="formlink-getter" type="button" class="pure-button">What is the current FormLink?</button>
 </form>
 
-<h4>Test Form</h4>
 <form id="frm-test-form" class="pure-form pure-form-aligned" onsubmit="return false;" style="position: relative;">
+    <h4>Test Form</h4>
 
     <button type="reset" class="pure-button pure-button-primary pull-right" style="position: absolute; right: 10px;">Clear All Inputs</button>
 
@@ -425,10 +432,19 @@ $frmTestSet.submit(function(e) {
     var formData = $form.serializeObject();
     var testDataSet = testData[formData['test-set']];
     $.formlink.applyForm($frmTestForm, testDataSet);
+    $form.change(); // trigger change event
 });
 
 
-$('form').formlink();
+$('#frm-test-data').formlink({
+    handle: function(formlink) {
+        // We have access to formlink API here. There's a button that when clicked will display the current formlink.
+        $('button#formlink-getter').click(function(event) {
+            alert(formlink.get());
+        });
+    }
+});
+$('#frm-test-form').formlink();
 
 </script>
 

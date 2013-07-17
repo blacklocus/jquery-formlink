@@ -18,12 +18,16 @@ form.
 
 This will generate an &lt;a&gt; at the end of the form with the FormLink.
 
-TODO custom callback option...
-
-Alternatively, the FormLink handle may be given.
+Alternatively, FormLink may be given a initialization callback function. The function itself receives a handle to
+retrieve the FormLink.
 
     $(form).formlink({
-        handle: '.formlink' // anything that jQuery accepts
+        handle: function(formlink) {
+            // We have access to formlink API here. There's a button that when clicked will display the current formlink.
+            $('button#formlink-getter').click(function(event) {
+                alert(formlink.get());
+            });
+        }
     });
 
 Currently a FormLink may only pre-fill a single form.

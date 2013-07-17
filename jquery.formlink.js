@@ -195,11 +195,6 @@
         }
 
         function getFormId(form) {
-            var id = form.attr('id');
-            if (!id) {
-                throw new Error('form element must have an "id"');
-            }
-            return id;
         }
 
         function unlinkifyFormData() {
@@ -214,8 +209,12 @@
             return null;
         }
 
-        function linkifyFormData(formId, form) {
-            console.debug('linkifying ' + formId);
+        function linkifyFormData(form) {
+            var formId = form.attr('id');
+            if (!formId) {
+                throw new Error('form element must have an "id"');
+            }
+
             var encodedFormData = encodeURIComponent(JSON.stringify(prepareFormData(form)));
 
             var protocol = window.location.protocol;
@@ -269,27 +268,37 @@
                 $.formlink.applyForm($this, formData);
             }
 
-            var formlink;
-            function refreshFormLink() {
-                formlink = linkifyFormData(getFormId($this), $this);
+            function getFormLink() {
+                return linkifyFormData($this);
             }
 
             // attach handles that externalize a FormLink
-            var $targets;
             if (options.handle) {
                 // attach to user-configured
-                $targets = $(options.handle);
-            }
-            if (!$targets) {
+                var formlink = {
+                    get: getFormLink
+                };
+                options.handle(formlink);
+
+            } else {
                 // default to a generated <a>
-                $targets = $('<a href="#">FormLink</a>').click(function(jqEvent) {
+                var $a = $('<a href="#">FormLink</a>').appendTo($this);
+
+                function refreshFormLink() {
+                    // update the href on this auto-generated <a>
+                    $a.attr('href', getFormLink());
+                }
+
+                // This may cause bad performance, but it will keep the <a href> in sync in case the user decides to
+                // "Copy Link Address".
+                $this.change(function(jqEvent){
                     refreshFormLink();
-                    $(this).attr('href', formlink);
-                }).appendTo($this);
+                });
+                // There are ways to modify forms with triggering change events. Catch it again.
+                $a.on('mouseover click', function(jqEvent) {
+                    refreshFormLink();
+                });
             }
-            $this.change(function(jqEvent){
-                refreshFormLink();
-            });
         });
     };
 
@@ -298,15 +307,6 @@
     // public functions
 
     $.formlink = {
-        clear: function() {
-            for (var i = localStorage.length - 1; i >= 0; i--) {
-                var key = localStorage.key(i);
-                if (key.indexOf(formLinkParam) === 0) {
-                    console.debug('deleting ' + key);
-                    localStorage.removeItem(key);
-                }
-            }
-        },
         /**
          * @param {jQuery} $form to populate
          * @param {object} values to apply to form
