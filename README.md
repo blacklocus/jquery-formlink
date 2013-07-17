@@ -23,7 +23,8 @@ retrieve the FormLink.
 
     $(form).formlink({
         handle: function(formlink) {
-            // We have access to formlink API here. There's a button that when clicked will display the current formlink.
+            // We have access to formlink url here. There's a button that
+            // when clicked will display the current formlink.
             $('button#formlink-getter').click(function(event) {
                 alert(formlink.get());
             });
