@@ -12,7 +12,7 @@ Usage
 This will enable one or more forms (as matched by the jQuery selector) with FormLink functionality. If the URL contains
 the formlink parameter, the form will be scrolled to (just like a hash #anchor) and filled with the values encoded
 in the formlink parameter. Forms should be given a proper `id` attribute, or else FormLink may refuse to meld onto the
-form.
+form. Currently a FormLink may only pre-fill a single form.
 
     $(form).formlink();
 
@@ -31,7 +31,26 @@ retrieve the FormLink.
         }
     });
 
-Currently a FormLink may only pre-fill a single form.
+You might even want to immediately show the results, say, if the form goes AJAX and renders results on the same page.
+
+    $(form).formlink({
+        handle: function(formlink) {
+            // still want to bind action to button
+            $('button#formlink-getter').click(function(event) {
+                alert(formlink.get());
+            });
+            // do something immediately if this was actually linked
+            if (formlink.wasLinked) {
+                formlink.form.submit();
+            }
+        }
+    });
+
+There are three properties available on the `formlink` object:
+
+  1. get() returns the current formlink url
+  2. wasLinked indicates if the current form was linked in the window's location
+  3. form is a jQuery reference to the current form
 
 
 Demo (Test) Page

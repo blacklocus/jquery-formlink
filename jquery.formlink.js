@@ -276,7 +276,9 @@
             if (options.handle) {
                 // attach to user-configured
                 var formlink = {
-                    get: getFormLink
+                    get: getFormLink,
+                    wasLinked: formData && true,
+                    form: $this
                 };
                 options.handle(formlink);
 
