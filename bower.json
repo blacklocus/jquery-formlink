@@ -1,0 +1,16 @@
+{
+  "name": "jquery.formlink",
+  "description": "Enables linking to pre-filled forms",
+  "version": "1.0.0",
+  "main": [
+    "./jquery.formlink.js"
+  ],
+  "ignore": [
+    "css", "img", "js", "*.json", "*.html", "**/.*"
+  ],
+  "dependencies": {
+    "jquery": ">=1.2"
+  },
+  "homepage": "https://github.com/blacklocus/jquery-formlink",
+  "license": "Apache2"
+}
